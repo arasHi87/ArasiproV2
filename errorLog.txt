@@ -1,0 +1,6 @@
+
+[<module 'time' (built-in)>] TalkException(reason='invalid mid', parameterMap=None, code=3)
+[<module 'time' (built-in)>] 'NoneType' object has no attribute 'lower'
+[<module 'time' (built-in)>] local variable 'error' referenced before assignment
+[<module 'time' (built-in)>] Can't convert 'TypeError' object to str implicitly
+[<module 'time' (built-in)>] Can't convert 'TypeError' object to str implicitly
