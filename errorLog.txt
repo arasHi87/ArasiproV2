@@ -4,3 +4,18 @@
 [<module 'time' (built-in)>] local variable 'error' referenced before assignment
 [<module 'time' (built-in)>] Can't convert 'TypeError' object to str implicitly
 [<module 'time' (built-in)>] Can't convert 'TypeError' object to str implicitly
+[<module 'time' (built-in)>] name 'mag' is not defined
+[<module 'time' (built-in)>] name 'mag' is not defined
+[<module 'time' (built-in)>] name 'mg' is not defined
+[<module 'time' (built-in)>] 'Message' object has no attribute 'test'
+[<module 'time' (built-in)>] name 'settins' is not defined
+[<module 'time' (built-in)>] name 'settins' is not defined
+[<module 'time' (built-in)>] name 'settins' is not defined
+[<module 'time' (built-in)>] name 'settins' is not defined
+[<module 'time' (built-in)>] name 'settins' is not defined
+[<module 'time' (built-in)>] name 'admin' is not defined
+[<module 'time' (built-in)>] name 'settins' is not defined
+[<module 'time' (built-in)>] name 'settins' is not defined
+[<module 'time' (built-in)>] local variable 'msg' referenced before assignment
+[<module 'time' (built-in)>] name 'settins' is not defined
+[<module 'time' (built-in)>] name 'param2' is not defined
