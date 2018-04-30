@@ -19,3 +19,12 @@
 [<module 'time' (built-in)>] local variable 'msg' referenced before assignment
 [<module 'time' (built-in)>] name 'settins' is not defined
 [<module 'time' (built-in)>] name 'param2' is not defined
+[<module 'time' (built-in)>] 'c1529e3e087e937552012768aa7e9db44'
+[<module 'time' (built-in)>] TalkException(parameterMap=None, code=0, reason='invalid mid')
+[<module 'time' (built-in)>] 'c1529e3e087e937552012768aa7e9db44'
+[<module 'time' (built-in)>] TalkException(reason='not a member', parameterMap={}, code=10)
+[<module 'time' (built-in)>] 'c1529e3e087e937552012768aa7e9db44'
+[<module 'time' (built-in)>] 'c1529e3e087e937552012768aa7e9db44'
+[<module 'time' (built-in)>] list index out of range
+[<module 'time' (built-in)>] 'c1529e3e087e937552012768aa7e9db44'
+[<module 'time' (built-in)>] list index out of range

@@ -83,24 +83,23 @@ def lineBot(op):
             group = cl.getGroup(op.param1)
             print ("[ 13 ] 通知邀請群組: " + str(group.name) + "\n邀請者: " + contact1.displayName + "\n被邀請者" + contact2.displayName)
             if settings["autoJoin"] == True:
-                if op.param2 in settings['admin'] or op.param2 in settings['bot']:
-                    print ("進入群組: " + str(group.name))
-                    cl.acceptGroupInvitation(op.param1)
-                    try:
-                        mc = ""
-                        for mi_d in settings["bot"]:
-                            cl.findAndAddContactsByMid(mi_d)
-                            cl.inviteIntoGroup(msg.to,[mi_d])
-                    except:
-                        pass
-                pass
+                print ("進入群組: " + str(group.name))
+                cl.acceptGroupInvitation(op.param1)
+                try:
+                    mc = ""
+                    for mi_d in settings["bot"]:
+                        cl.findAndAddContactsByMid(mi_d)
+                        cl.inviteIntoGroup(msg.to,[mi_d])
+                except:
+                    pass
         if op.type == 19:
             contact1 = cl.getContact(op.param2)
             group = cl.getGroup(op.param1)
             contact2 = cl.getContact(op.param3)
+            GS = group.creator.mid
             print ("[19]有人把人踢出群組 群組名稱: " + str(group.name) +"\n踢人者: " + contact1.displayName + "\nMid: " + contact1.mid + "\n被踢者" + contact2.displayName + "\nMid:" + contact2.mid )
-            if settings["protect"] == True:
-                if op.param2 in settings['admin']:
+            if settings["protect"][op.param1] == True:
+                if op.param2 in settings['admin'] or op.param2 in settings['bot'] or op.param2 == GS:
                     pass
                 else:
                     cl.kickoutFromGroup(op.param1,[op.param2])
@@ -108,14 +107,13 @@ def lineBot(op):
                     with open('temp.json', 'w') as fp:
                             json.dump(settings, fp, sort_keys=True, indent=4)
                             cl.sendMessage(msg.to, "成功新增blacklist\n" + "MID : " + list_[1])
-                    if contact2.mid in settings['bot']:
-                        ticket = cl.reissueGroupTicket(op.param1)
-                        if group.preventedJoinByTicket == False:
-                            pass
-                        else:
-                            group.preventedJoinByTicket = False
-                            cl.updateGroup(group)
-                        cl.sendMessage("c02fb6eba0220cef6c6f82d8e15c458b6", "join:"+G.id+':'+ticket)
+                    ticket = cl.reissueGroupTicket(op.param1)
+                    if group.preventedJoinByTicket == False:
+                        pass
+                    else:
+                        group.preventedJoinByTicket = False
+                        cl.updateGroup(group)
+                    cl.sendMessage("c02fb6eba0220cef6c6f82d8e15c458b6", "join:"+G.id+':'+ticket)
         if op.type == 26 or op.type == 25:
             msg = op.message
             text = msg.text
@@ -198,6 +196,72 @@ def lineBot(op):
                                     cl.sendMessage(msg.to, "成功移除ADMIN\n" + "MID : " + list_[1])
                     except:
                         cl.sendMessage(msg.to, "失敗移除ADMIN\n" + "MID : " + list_[1])
+                elif text.lower() == 'add on':
+                    settings["autoAdd"] = True
+                    cl.sendMessage(to, "自動加入好友已開啟")
+                elif text.lower() == 'add off':
+                    settings["autoAdd"] = False
+                    cl.sendMessage(to, "自動加入好友已關閉")
+                elif text.lower() == 'join on':
+                    settings["autoJoin"] = True
+                    cl.sendMessage(to, "自動加入群組已開啟")
+                elif text.lower() == 'join off':
+                    settings["autoJoin"] = False
+                    cl.sendMessage(to, "自動加入群組已關閉")
+                elif text.lower() == 'leave on':
+                    settings["autoLeave"] = True
+                    cl.sendMessage(to, "自動離開副本已開啟")
+                elif text.lower() == 'leave off':
+                    settings["autoLeave"] = False
+                    cl.sendMessage(to, "自動離開副本已關閉")
+                elif text.lower() == 'contact on':
+                    settings["contact"] = True
+                    cl.sendMessage(to, "查看好友資料詳情開啟")
+                elif text.lower() == 'contact off':
+                    settings["contact"] = False
+                    cl.sendMessage(to, "查看好友資料詳情關閉")
+                elif text.lower() == 'inviteprotect on':
+                    group = cl.getGroup(to)
+                    GS = group.creator.mid
+                    settings["inviteprotect"][to] = True
+                    with open('temp.json', 'w') as fp:
+                        json.dump(settings, fp, sort_keys=True, indent=4)
+                    cl.sendMessage(to, "群組邀請保護已開啟")
+                elif text.lower() == 'inviteprotect off':
+                    group = cl.getGroup(to)
+                    GS = group.creator.mid
+                    settings["inviteprotect"][to] = False
+                    with open('temp.json', 'w') as fp:
+                        json.dump(settings, fp, sort_keys=True, indent=4)
+                    cl.sendMessage(to, "群組邀請保護已關閉")
+                elif text.lower() == 'qr on':
+                    group = cl.getGroup(to)
+                    GS = group.creator.mid
+                    settings["qrprotect"][to] = True
+                    with open('temp.json', 'w') as fp:
+                        json.dump(settings, fp, sort_keys=True, indent=4)
+                    cl.sendMessage(to, "群組網址保護已開啟")
+                elif text.lower() == 'qr off':
+                    group = cl.getGroup(to)
+                    GS = group.creator.mid
+                    settings["qrprotect"][to] = False
+                    with open('temp.json', 'w') as fp:
+                        json.dump(settings, fp, sort_keys=True, indent=4)
+                    cl.sendMessage(to, "群組網址保護已關閉")
+                elif text.lower() == 'reread on':
+                    group = cl.getGroup(to)
+                    GS = group.creator.mid
+                    settings["reread"][to] = True
+                    with open('temp.json', 'w') as fp:
+                        json.dump(settings, fp, sort_keys=True, indent=4)
+                    cl.sendMessage(to, "查詢收回開啟")
+                elif text.lower() == 'reread off':
+                    group = cl.getGroup(to)
+                    GS = group.creator.mid
+                    settings["reread"][to] = False
+                    with open('temp.json', 'w') as fp:
+                        json.dump(settings, fp, sort_keys=True, indent=4)
+                    cl.sendMessage(to, "查詢收回關閉")
             if text.lower() == 'speed':
                 time0 = timeit.timeit('"-".join(str(n) for n in range(100))', number=10000)
                 str1 = str(time0)
@@ -544,7 +608,7 @@ def lineBot(op):
         if op.type == 26:
             try:
                 msg = op.message
-                if settings["reread"] == True:
+                if settings["reread"][op.param1] == True:
                     if msg.toType == 0:
                         cl.log("[%s]"%(msg._from)+msg.text)
                     else:
@@ -559,7 +623,7 @@ def lineBot(op):
             try:
                 at = op.param1
                 msg_id = op.param2
-                if settings["reread"] == True:
+                if settings["reread"][op.param1] == True:
                     if msg_id in msg_dict:
                         if msg_dict[msg_id]["from"] not in bl:
                             cl.sendMessage(at,"[收回訊息者]\n%s\n[訊息內容]\n%s"%(cl.getContact(msg_dict[msg_id]["from"]).displayName,msg_dict[msg_id]["text"]))

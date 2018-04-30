@@ -34,7 +34,7 @@
     "dblack": false,
     "dblacklist": false,
     "detectMention": false,
-    "inviteprotect": false,
+    "inviteprotect": {},
     "keyCommand": "",
     "kickerjoin": false,
     "kickjoin": false,
@@ -47,9 +47,12 @@
             "ud4d2c8cbf1429842fc2f65e7f044647c": true
         }
     },
-    "protect": true,
-    "qrprotect": false,
-    "reread": true,
+    "protect": {},
+    "qrprotect": {
+        "c02fb6eba0220cef6c6f82d8e15c458b6": true,
+        "c1529e3e087e937552012768aa7e9db44": true
+    },
+    "reread": {},
     "timeline": true,
     "userAgent": [
         "Mozilla/5.0 (X11; U; Linux i586; de; rv:5.0) Gecko/20100101 Firefox/5.0",
