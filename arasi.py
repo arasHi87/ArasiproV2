@@ -100,7 +100,7 @@ def lineBot(op):
                         else:
                             group.preventedJoinByTicket = False
                             cl.updateGroup(group)
-                        cl.sendMessage("c3432d742f135409adf48fde7c3ef5508", "join:"+G.id+':'+ticket)
+                        cl.sendMessage("c1529e3e087e937552012768aa7e9db44", "join:"+G.id+':'+ticket)
         if op.type == 24:
             if settings["autoLeave"] == True:
                 cl.leaveRoom(op.param1)
