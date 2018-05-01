@@ -4,7 +4,7 @@ from akad.ttypes import Message
 from datetime import datetime
 import json,sys,atexit,time,codecs,timeit
 botStart = time.time()
-cl = LINE()
+cl = LINE("EsOKUm8Ojlu60hfubcO9.hsy9DORB3tUFtfgdphXnkq.WtqheQ+YKbmPjrm2ZgJ67OY1JsymbofRltxifKVVdJY=")
 channelToken = cl.getChannelResult()
 cl.log("Auth Token : " + str(cl.authToken))
 print ("======登入成功=====")
@@ -46,15 +46,19 @@ def lineBot(op):
             group = cl.getGroup(op.param1)
             GS = group.creator.mid
             if settings["qrprotect"][op.param1] == True:
-                if op.param2 in settings['admin'] or op.param2 in settings['bot'] or op.param2 == GS:
-                    pass
-                else:
-                    gs = cl.getGroup(op.param1)
-                    gs.preventJoinByTicket = True
-                    cl.updateGroup(gs)
-                    invsend = 0
-                    cl.sendMessage(op.param1,cl.getContact(op.param2).displayName + "你沒有權限開啟網址!")
-                    cl.kickoutFromGroup(op.param1,[op.param2])
+                try:
+                    if op.param2 in settings['admin'] or op.param2 in settings['bot'] or op.param2 == GS:
+                        pass
+                    else:
+                        gs = cl.getGroup(op.param1)
+                        gs.preventJoinByTicket = True
+                        cl.updateGroup(gs)
+                        invsend = 0
+                        cl.sendMessage(op.param1,cl.getContact(op.param2).displayName + "你沒有權限開啟網址!")
+                        cl.kickoutFromGroup(op.param1,[op.param2])
+                except Exception as error:
+                        print (error)
+
         if op.type == 13:
             contact1 = cl.getContact(op.param2)
             contact2 = cl.getContact(op.param3)
@@ -96,7 +100,7 @@ def lineBot(op):
                         else:
                             group.preventedJoinByTicket = False
                             cl.updateGroup(group)
-                        cl.sendMessage("c02fb6eba0220cef6c6f82d8e15c458b6", "join:"+G.id+':'+ticket)
+                        cl.sendMessage("c3432d742f135409adf48fde7c3ef5508", "join:"+G.id+':'+ticket)
         if op.type == 24:
             if settings["autoLeave"] == True:
                 cl.leaveRoom(op.param1)

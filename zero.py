@@ -8,7 +8,7 @@ import time, random, sys, json, codecs, threading, glob, re, string, os, request
 from gtts import gTTS
 from googletrans import Translator
 botStart = time.time()
-cl = LINE("Es1RJ1tgyNovQFB9Uxx0.T7Q8AO+zLd/wncYeQ/cwCa.+QWQZ93vy/wr/NEjb+6bz1BN0xEXtR8I1wfa2bAUBYw=")
+cl = LINE("Esa6gi9jtXCFiEJNCvv8.HE6aZ7ktwzuq0mf6SLPCMa.ZcyOdk3rI0o/of3ou1xZbIpawGIgvKNrepTqPszlnnM=")
 cl.log("Auth Token : " + str(cl.authToken))
 oepoll = OEPoll(cl)
 readOpen = codecs.open("read.json","r","utf-8")
@@ -85,35 +85,34 @@ def lineBot(op):
             if settings["autoJoin"] == True:
                 print ("進入群組: " + str(group.name))
                 cl.acceptGroupInvitation(op.param1)
-                try:
-                    mc = ""
-                    for mi_d in settings["bot"]:
-                        cl.findAndAddContactsByMid(mi_d)
-                        cl.inviteIntoGroup(msg.to,[mi_d])
-                except:
-                    pass
+                cl.sendMessage(to, "歡迎使用由Arasi開發的ArasiproV2!!!")
+                cl.sendMessage(to, "My creator:")
+                cl.sendContact(to, "u85ee80cfb293599510d0c17ab25a5c98")
         if op.type == 19:
             contact1 = cl.getContact(op.param2)
             group = cl.getGroup(op.param1)
             contact2 = cl.getContact(op.param3)
             GS = group.creator.mid
             print ("[19]有人把人踢出群組 群組名稱: " + str(group.name) +"\n踢人者: " + contact1.displayName + "\nMid: " + contact1.mid + "\n被踢者" + contact2.displayName + "\nMid:" + contact2.mid )
-            if settings["protect"][op.param1] == True:
+            if settings["protect"] == True:
                 if op.param2 in settings['admin'] or op.param2 in settings['bot'] or op.param2 == GS:
                     pass
                 else:
                     cl.kickoutFromGroup(op.param1,[op.param2])
-                    settings["blacklist"][op.param2] = True
-                    with open('temp.json', 'w') as fp:
-                            json.dump(settings, fp, sort_keys=True, indent=4)
-                            cl.sendMessage(msg.to, "成功新增blacklist\n" + "MID : " + list_[1])
-                    ticket = cl.reissueGroupTicket(op.param1)
-                    if group.preventedJoinByTicket == False:
-                        pass
+                    if op.param3 in settings['bot']:
+                        settings["blacklist"][op.param3] = True
+                        with open('temp.json', 'w') as fp:
+                                json.dump(settings, fp, sort_keys=True, indent=4)
+                                cl.sendMessage(op.param1, "成功新增blacklist\n" + "MID : " + op.param2)
+                        ticket = cl.reissueGroupTicket(op.param1)
+                        if group.preventedJoinByTicket == False:
+                            pass
+                        else:
+                            group.preventedJoinByTicket = False
+                            cl.updateGroup(group)
+                        cl.sendMessage("c1529e3e087e937552012768aa7e9db44", "join:"+group.id+':'+ticket)
                     else:
-                        group.preventedJoinByTicket = False
-                        cl.updateGroup(group)
-                    cl.sendMessage("c02fb6eba0220cef6c6f82d8e15c458b6", "join:"+G.id+':'+ticket)
+                        pass
         if op.type == 26 or op.type == 25:
             msg = op.message
             text = msg.text
@@ -196,6 +195,19 @@ def lineBot(op):
                                     cl.sendMessage(msg.to, "成功移除ADMIN\n" + "MID : " + list_[1])
                     except:
                         cl.sendMessage(msg.to, "失敗移除ADMIN\n" + "MID : " + list_[1])
+                elif msg.text in ["c","C","cancel","Cancel"]:
+                      if msg.toType == 2:
+                    X = cl.getGroup(msg.to)
+                    if X.invitee is not None:
+                        gInviMids = (contact.mid for contact in X.invitee)
+                        ginfo = cl.getGroup(msg.to)
+                        sinvitee = str(len(ginfo.invitee))
+                        start = time.time()
+                        for cancelmod in gInviMids:
+                            cl.cancelGroupInvitation(msg.to, [cancelmod])
+                        elapsed_time = time.time() - start
+                        cl.sendMessage(to, "已取消完成\n取消時間: %s秒" % (elapsed_time))
+                        cl.sendMessage(to, "取消人數:" + sinvitee)
                 elif text.lower() == 'add on':
                     settings["autoAdd"] = True
                     cl.sendMessage(to, "自動加入好友已開啟")
@@ -249,16 +261,12 @@ def lineBot(op):
                         json.dump(settings, fp, sort_keys=True, indent=4)
                     cl.sendMessage(to, "群組網址保護已關閉")
                 elif text.lower() == 'reread on':
-                    group = cl.getGroup(to)
-                    GS = group.creator.mid
-                    settings["reread"][to] = True
+                    settings["reread"] = True
                     with open('temp.json', 'w') as fp:
                         json.dump(settings, fp, sort_keys=True, indent=4)
                     cl.sendMessage(to, "查詢收回開啟")
                 elif text.lower() == 'reread off':
-                    group = cl.getGroup(to)
-                    GS = group.creator.mid
-                    settings["reread"][to] = False
+                    settings["reread"] = False
                     with open('temp.json', 'w') as fp:
                         json.dump(settings, fp, sort_keys=True, indent=4)
                     cl.sendMessage(to, "查詢收回關閉")
@@ -360,6 +368,29 @@ def lineBot(op):
                         for ls in lists:
                             path = cl.getProfileCoverURL(ls)
                             cl.sendImageWithURL(msg.to, str(path))
+            elif text.lower() == 'set':
+                    try:
+                        ret_ = "╔══[ 設定 ]"
+                        if settings["autoAdd"] == True: ret_ += "\n╠ 自動加入好友 ✅"
+                        else: ret_ += "\n╠ 自動加入好友 ❌"
+                        if settings["autoJoin"] == True: ret_ += "\n╠ 自動加入群組 ✅"
+                        else: ret_ += "\n╠ 自動加入群組 ❌"
+                        if settings["autoLeave"] == True: ret_ += "\n╠ 自動離開副本 ✅"
+                        else: ret_ += "\n╠ 自動離開副本 ❌"
+                        if settings["autoRead"] == True: ret_ += "\n╠ 自動已讀 ✅"
+                        else: ret_ += "\n╠ 自動已讀 ❌"
+                        if settings["inviteprotect"][to] == True: ret_ += "\n╠ 群組邀請保護 ✅"
+                        else: ret_ += "\n╠ 群組邀請保護 ❌"
+                        if settings["qrprotect"] == True: ret_ += "\n╠ 群組網址保護 ✅"
+                        else: ret_ += "\n╠ 群組網址保護 ❌"
+                        if settings["contact"] == True: ret_ += "\n╠ 詳細資料 ✅"
+                        else: ret_ += "\n╠ 詳細資料 ❌"
+                        if settings["reread"] == True: ret_ += "\n╠ 查詢收回開啟 ✅"
+                        else: ret_ += "\n╠ 查詢收回關閉 ❌"
+                        ret_ += "\n╚══[ 設定 ]"
+                        cl.sendMessage(to, str(ret_))
+                    except Exception as e:
+                        cl.sendMessage(msg.to, str(e))
             elif text.lower() == 'gowner':
                 group = cl.getGroup(to)
                 GS = group.creator.mid
@@ -568,7 +599,7 @@ def lineBot(op):
                 else:
                     G.preventedJoinByTicket = False
                     cl.updateGroup(G)
-                cl.sendMessage("c02fb6eba0220cef6c6f82d8e15c458b6", "join:"+G.id+':'+ticket)
+                cl.sendMessage("c1529e3e087e937552012768aa7e9db44", "join:"+G.id+':'+ticket)
             elif "join" in msg.text:
                 list_ = msg.text.split(":")
                 try:
@@ -608,7 +639,7 @@ def lineBot(op):
         if op.type == 26:
             try:
                 msg = op.message
-                if settings["reread"][op.param1] == True:
+                if settings["reread"] == True:
                     if msg.toType == 0:
                         cl.log("[%s]"%(msg._from)+msg.text)
                     else:
@@ -618,12 +649,12 @@ def lineBot(op):
                 else:
                     pass
             except Exception as e:
-                print(e)
+                print(logError(e))
         if op.type == 65:
             try:
                 at = op.param1
                 msg_id = op.param2
-                if settings["reread"][op.param1] == True:
+                if settings["reread"] == True:
                     if msg_id in msg_dict:
                         if msg_dict[msg_id]["from"] not in bl:
                             cl.sendMessage(at,"[收回訊息者]\n%s\n[訊息內容]\n%s"%(cl.getContact(msg_dict[msg_id]["from"]).displayName,msg_dict[msg_id]["text"]))
