@@ -197,17 +197,17 @@ def lineBot(op):
                         cl.sendMessage(msg.to, "失敗移除ADMIN\n" + "MID : " + list_[1])
                 elif msg.text in ["c","C","cancel","Cancel"]:
                       if msg.toType == 2:
-                    X = cl.getGroup(msg.to)
-                    if X.invitee is not None:
-                        gInviMids = (contact.mid for contact in X.invitee)
-                        ginfo = cl.getGroup(msg.to)
-                        sinvitee = str(len(ginfo.invitee))
-                        start = time.time()
-                        for cancelmod in gInviMids:
-                            cl.cancelGroupInvitation(msg.to, [cancelmod])
-                        elapsed_time = time.time() - start
-                        cl.sendMessage(to, "已取消完成\n取消時間: %s秒" % (elapsed_time))
-                        cl.sendMessage(to, "取消人數:" + sinvitee)
+                        X = cl.getGroup(msg.to)
+                        if X.invitee is not None:
+                            gInviMids = (contact.mid for contact in X.invitee)
+                            ginfo = cl.getGroup(msg.to)
+                            sinvitee = str(len(ginfo.invitee))
+                            start = time.time()
+                            for cancelmod in gInviMids:
+                                cl.cancelGroupInvitation(msg.to, [cancelmod])
+                            elapsed_time = time.time() - start
+                            cl.sendMessage(to, "已取消完成\n取消時間: %s秒" % (elapsed_time))
+                            cl.sendMessage(to, "取消人數:" + sinvitee)
                 elif text.lower() == 'add on':
                     settings["autoAdd"] = True
                     cl.sendMessage(to, "自動加入好友已開啟")
